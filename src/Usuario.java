@@ -12,4 +12,8 @@ public class Usuario {
     public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
     }
+
+    public void exibirInfo(){
+        System.out.println("Nome: " + getNomeUsuario());
+    }
 }
