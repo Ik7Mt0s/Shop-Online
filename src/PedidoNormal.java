@@ -6,6 +6,9 @@ public class PedidoNormal extends Pedido {
     @Override
     public double calcularTotal() {
         double subtotal = calcularSubtotal();
+
+        subtotal = aplicarDescontoNoSubtotal(subtotal);
+        
         double frete = 15.0;
         return subtotal + frete;
 }

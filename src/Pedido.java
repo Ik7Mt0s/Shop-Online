@@ -6,12 +6,14 @@ protected int id;
 protected String nomeCliente;
 protected StatusPedido status;
 protected List<ItemPedido> itens;
+protected DescontoStrategy descontoStrategy;
 
 public Pedido(int id, String nomeCliente, String status) {
     this. id = id ;
     this.nomeCliente = nomeCliente;
     this.status = StatusPedido.Pendente;
     this.itens = new ArrayList<>();
+    this.descontoStrategy = null;
 }
 public int getId() {
     return id;
@@ -35,12 +37,23 @@ public void setStatus(StatusPedido novoStatus) {
         throw  new IllegalArgumentException("Transição de Status inválida");
     }
 }
+
+public void setDescontoStrategy(DescontoStrategy descontoStrategy) {
+        this.descontoStrategy = descontoStrategy;
+    }  
 public void addItem(int quantidade, Produto produto) {
     itens.add(new ItemPedido(quantidade, produto));
 }
 public void removeItem(int quantidade, Produto produto) {
     itens.remove(new ItemPedido(quantidade, produto));
 }
+
+ protected double aplicarDescontoNoSubtotal(double subtotal) {
+        if (descontoStrategy != null) {
+            return descontoStrategy.aplicarDesconto(subtotal);
+        }
+        return subtotal;
+    }
 public double calcularSubtotal() {
     double total = 0;
     for (ItemPedido item : itens) {
@@ -51,12 +64,17 @@ public double calcularSubtotal() {
 private boolean isValidTransicaoStatus(StatusPedido atual, StatusPedido novo) {
     return true;
 }
-public abstract double calcularTotal();
+
 @Override
 public String toString() {
     return "Pedido:\n" +
             "Id: " + id + "\n" +
             ", Nome: " + nomeCliente + "\n" +
             ", Status: " + status + "\n" +
-            "itens: " + itens;}
+            "itens: " + itens;
+        }
+public abstract double calcularTotal();
 }
+
+
+
