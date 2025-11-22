@@ -201,24 +201,26 @@ public class Main {
             System.out.println("Erro ao salvar pedidos: " + e.getMessage());
         }
     }
-
     private static void salvarCashbackClientes() {
-        String arquivoCashback = "cashback_clientes.txt";
-        try (PrintWriter writer = new PrintWriter(arquivoCashback)) {
-            writer.println("RELATÓRIO DE CASHBACK - " + java.time.LocalDate.now());
-            writer.println("==========================================");
-        
-            for (Cliente c : clientes) {
-                String nivel = getNivelCliente(c);
-                writer.printf("Cliente: %s | Nível: %s | Email: %s | Cashback Acumulado: R$ %.2f%n",
-                            c.getNome(), nivel, c.getEmail(), c.getCashbackAcumulado());
+    String arquivoCashback = "cashback_clientes.txt";
+    try (java.io.FileWriter fw = new java.io.FileWriter(arquivoCashback, false);
+         PrintWriter writer = new PrintWriter(fw)) {
+        writer.println("RELATÓRIO DE CASHBACK - " + java.time.LocalDateTime.now());
+        writer.println("==========================================");
+        if (clientes.isEmpty()) {
+            writer.println("Nenhum cliente cadastrado para exibir.");
         }
-            System.out.println("Cashback dos clientes salvo em: " + arquivoCashback);
-        } catch (Exception e) {
-            System.out.println("Erro ao salvar cashback: " + e.getMessage());
+        for (Cliente c : clientes) {
+            String nivel = getNivelCliente(c);
+            writer.printf("Cliente: %s | Nível: %s | Email: %s | Cashback: R$ %.2f%n",
+                        c.getNome(), nivel, c.getEmail(), c.getCashbackAcumulado());
         }
+        System.out.println("SUCESSO: Relatório de cashback salvo em '" + arquivoCashback + "'"); 
+    } catch (Exception e) {
+        System.out.println("ERRO CRÍTICO ao salvar cashback: " + e.getMessage());
+        e.printStackTrace(); 
     }
-
+}
     private static Cliente menuLoginCadastro() {
         System.out.println("\n--- LOGIN / CADASTRO ---");
         System.out.println("1. Já tenho login");
@@ -546,34 +548,38 @@ public class Main {
     }
 
     private static void menuRelatorios() {
-        System.out.println("\n--- RELATÓRIOS ---");
-        System.out.println("1. Listar Produtos com Desconto");
-        System.out.println("2. Listar Todos os Pedidos Confirmados");
-        System.out.println("3. Listar Cashback Acumulado por Cliente");
-        System.out.println("0. Voltar");
-        System.out.print("Escolha uma opção de relatório: ");
+    System.out.println("\n--- RELATÓRIOS ---");
+    System.out.println("1. Listar Produtos com Desconto (Tela)");
+    System.out.println("2. Listar Pedidos Confirmados (Tela)");
+    System.out.println("3. Listar Cashback na Tela");
+    System.out.println("4. GERAR ARQUIVO TXT DE CASHBACK"); 
+    System.out.println("0. Voltar");
+    System.out.print("Escolha uma opção: ");
 
-        try {
-            int opcao = Integer.parseInt(scanner.nextLine());
-            switch (opcao) {
-                case 1:
-                    relatorioProdutosDesconto();
-                    break;
-                case 2:
-                    relatorioPedidosConfirmados();
-                    break;
-                case 3:
-                    relatorioCashback();
-                    break;
-                case 0:
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Entrada inválida.");
+    try {
+        int opcao = Integer.parseInt(scanner.nextLine());
+        switch (opcao) {
+            case 1:
+                relatorioProdutosDesconto();
+                break;
+            case 2:
+                relatorioPedidosConfirmados();
+                break;
+            case 3:
+                relatorioCashback(); 
+                break;
+            case 4:
+                salvarCashbackClientes(); 
+                break;
+            case 0:
+                break;
+            default:
+                System.out.println("Opção inválida.");
         }
+    } catch (NumberFormatException e) {
+        System.out.println("Entrada inválida.");
     }
+}
 
     private static void relatorioProdutosDesconto() {
         System.out.println("\n--- RELATÓRIO DE PRODUTOS E DESCONTOS ---");
