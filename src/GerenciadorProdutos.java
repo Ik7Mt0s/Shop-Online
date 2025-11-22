@@ -23,14 +23,14 @@ public class GerenciadorProdutos {
                 int id = Integer.parseInt(dados[0]);
                 String nome = dados[1];
                 double preco = Double.parseDouble(dados[2]);
-                int estoque = Integer.parseInt(dados[3]);
-                String tipo = dados[4];
+                String tipo = dados[3];
                 
                 Produto p;
                 if (tipo.equals("FISICO")) {
+                    int estoque = Integer.parseInt(dados[4]);
                     p = new ProdutoFisico(id, nome, preco, estoque);
                 } else {
-                    p = new ProdutoDigital(id, nome, preco, estoque);
+                    p = new ProdutoDigital(id, nome, preco);
                 }
                 
                 produtos.add(p);
@@ -41,7 +41,7 @@ public class GerenciadorProdutos {
         }
     }
     
-    private void salvarProdutos() {
+    public void salvarProdutos() {
         try {
             PrintWriter writer = new PrintWriter(arquivo);
             for (Produto p : produtos) {

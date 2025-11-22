@@ -7,7 +7,6 @@ public class DescontoCupom implements DescontoStrategy {
 
     @Override
     public double aplicarDesconto(double valorTotal) {
-        // Encapsulamento: A lógica matemática fica escondida aqui
         double fator = 1 - (porcentagemDesconto / 100.0);
         return valorTotal * fator;
     }

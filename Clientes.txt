@@ -1,5 +1,6 @@
-1;carlos;car@gmail.com;Bronze;150.0;1.5
-2;Matheus;mat@gmail.com;Prata;300.0;15.0
-3;Ana;ana@hotmail.com;Ouro;500.0;45.0
-4;Lucas;lucas@gmail.com;Ouro;1000.0;90.0
-5;Joao;jp@gmail.com;Prata;200.0;10.0
+1;carlos;car@gmail.com;BRONZE
+2;Matheus;mat@gmail.com;BRONZE
+3;Ana;ana@hotmail.com;BRONZE
+4;Lucas;lucas@gmail.com;BRONZE
+5;Joao;jp@gmail.com;BRONZE
+6;Icaro Matos;icaromatoscastelobranco@gmail.com;PRATA
