@@ -24,4 +24,11 @@ public abstract class Cliente {
     }
 
     public abstract double calcularCashback(double valorCompra);
+    
+    public void setTotalGasto(double totalGasto) {
+        this.totalGasto = totalGasto;
+    }
+    public void setCashbackAcumulado(double cashbackAcumulado) {
+        this.cashbackAcumulado = cashbackAcumulado;
+    }
 }
