@@ -57,56 +57,67 @@ public class Main {
     }
 
     public static void carregarClientes() {
-        try {
-            File file = new File(arquivoClientes);
-            Scanner fileScanner = new Scanner(file);
-            while (fileScanner.hasNextLine()) {
-                String linha = fileScanner.nextLine();
-                if (!linha.trim().isEmpty()) {
-                    String[] dados = linha.split(";");
-                    if (dados.length >= 4) {
-                        int id = Integer.parseInt(dados[0]);
-                        String nome = dados[1];
-                        String email = dados[2];
-                        String tipo = dados[3];
-                        
-                        Cliente cliente;
-                        switch (tipo) {
-                            case "OURO":
-                                cliente = new ClienteOuro(id, nome, email);
-                                break;
-                            case "PRATA":
-                                cliente = new ClientePrata(id, nome, email);
-                                break;
-                            default:
-                                cliente = new ClienteBronze(id, nome, email);
-                        }
-                        clientes.add(cliente);
+    try {
+        File file = new File(arquivoClientes);
+        if (!file.exists()) return; 
+        Scanner fileScanner = new Scanner(file);
+        while (fileScanner.hasNextLine()) {
+            String linha = fileScanner.nextLine();
+            if (!linha.trim().isEmpty()) {
+                String[] dados = linha.split(";");
+                if (dados.length >= 4) {
+                    int id = Integer.parseInt(dados[0]);
+                    String nome = dados[1];
+                    String email = dados[2];
+                    String tipo = dados[3];
+                    
+                    Cliente cliente;
+                    switch (tipo) {
+                        case "OURO": cliente = new ClienteOuro(id, nome, email); break;
+                        case "PRATA": cliente = new ClientePrata(id, nome, email); break;
+                        default: cliente = new ClienteBronze(id, nome, email);
                     }
+                    if (dados.length >= 6) {
+                        try {
+                            double gasto = Double.parseDouble(dados[4]);
+                            double cashback = Double.parseDouble(dados[5]);
+                            cliente.setTotalGasto(gasto);       
+                            cliente.setCashbackAcumulado(cashback); 
+                        } catch (NumberFormatException e) {
+                            System.out.println("Erro ao ler valores financeiros do cliente " + id);
+                        }
+                    }
+
+                    clientes.add(cliente);
                 }
             }
-            fileScanner.close();
-        
-        } catch (Exception e) {
-            System.out.println("Erro ao carregar clientes: " + e.getMessage());
         }
+        fileScanner.close();
+    
+    } catch (Exception e) {
+        System.out.println("Erro ao carregar clientes: " + e.getMessage());
     }
+}
 
     private static void salvarClientes() {
-        try {
-            PrintWriter writer = new PrintWriter(arquivoClientes);
-            for (Cliente c : clientes) {
-                String tipo = "BRONZE";
-                if (c instanceof ClienteOuro) tipo = "OURO";
-                else if (c instanceof ClientePrata) tipo = "PRATA";
-                
-                writer.println(c.getId() + ";" + c.getNome() + ";" + c.getEmail() + ";" + tipo);
-            }
-            writer.close();
-        } catch (Exception e) {
-            System.out.println("Erro ao salvar clientes: " + e.getMessage());
+    try {
+        PrintWriter writer = new PrintWriter(arquivoClientes);
+        for (Cliente c : clientes) {
+            String tipo = "BRONZE";
+            if (c instanceof ClienteOuro) tipo = "OURO";
+            else if (c instanceof ClientePrata) tipo = "PRATA";
+            writer.println(c.getId() + ";" + 
+                           c.getNome() + ";" + 
+                           c.getEmail() + ";" + 
+                           tipo + ";" + 
+                           c.getTotalGasto() + ";" + 
+                           c.getCashbackAcumulado());
         }
+        writer.close();
+    } catch (Exception e) {
+        System.out.println("Erro ao salvar clientes: " + e.getMessage());
     }
+}
 
     private static void carregarPedidos() {
         try {
