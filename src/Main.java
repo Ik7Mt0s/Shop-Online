@@ -619,7 +619,7 @@ public class Main {
                 if (linha.startsWith("//") || linha.trim().isEmpty()) continue;
             
                 String[] dados = linha.split(";");
-                if (dados.length >= 6 && dados[2].equals("CONFIRMADO")) {
+                 if (dados.length >= 6 && dados[2].trim().equalsIgnoreCase("CONFIRMADO")) {
                     String id = dados[0];
                     String cliente = dados[1];
                     String total = dados[3];
