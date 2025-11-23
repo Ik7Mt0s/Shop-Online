@@ -110,8 +110,8 @@ Produto Físico cadastrado com sucesso!
 
 
 AUTORES:
-Ícaro Matos
-Murilo Souza
-Kaik Araujo
-Guilherme Moraes
-Rhuan Douglas
+Ícaro Matos,
+Murilo Souza,
+Kaik Araujo,
+Guilherme Moraes,
+Rhuan Douglas.
