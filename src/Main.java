@@ -14,6 +14,7 @@ public class Main {
     private static int nextPedidoId = 1;
     private static String arquivoClientes = "clientes.txt";
     private static String arquivoPedidos = "pedidos.txt";
+    private static final String SENHA_ADMIN = "1234567";
 
     public static void main(String[] args) {
         System.out.println("Sistema de Vendas Inicializado.");
@@ -41,6 +42,10 @@ public class Main {
                     case 2:
                         menuRelatorios();
                         break;
+                    case 3:
+                        if (verificarPermissao()) {
+                            menuCadastrarProduto();
+                        }
                     case 0:
                         System.out.println("Obrigado, saindo do sistema...");
                         break;
@@ -54,6 +59,64 @@ public class Main {
             }
         }
         scanner.close();
+    }
+     private static boolean verificarPermissao() {
+        System.out.print("Digite a senha de administrador: ");
+        String senha = scanner.nextLine();
+
+        if (senha.equals(SENHA_ADMIN)) {
+            System.out.println("Acesso autorizado!\n");
+            return true;
+        } else {
+            System.out.println("Senha incorreta. Acesso negado.");
+            return false;
+        }
+    }
+    private static void menuCadastrarProduto() {
+        System.out.println("\n--- CADASTRO DE NOVO PRODUTO ---");
+
+        try {
+            System.out.print("Nome do Produto: ");
+            String nome = scanner.nextLine();
+
+            System.out.print("Preço: R$ ");
+            double preco = Double.parseDouble(scanner.nextLine());
+
+            int novoId = gerenciadorProdutos.getProdutos().stream()
+                    .mapToInt(Produto::getId)
+                    .max().orElse(0) + 1;
+
+            System.out.println("Tipo do Produto:");
+            System.out.println("1. Físico (Requer estoque)");
+            System.out.println("2. Digital");
+            System.out.print("Escolha: ");
+            int tipo = Integer.parseInt(scanner.nextLine());
+
+            if (tipo == 1) {
+                System.out.print("Quantidade inicial em estoque: ");
+                int estoque = Integer.parseInt(scanner.nextLine());
+
+                ProdutoFisico novoFisico = new ProdutoFisico(novoId, nome, preco, estoque);
+                gerenciadorProdutos.adicionarProduto(novoFisico);
+                System.out.println("Produto Físico cadastrado com sucesso!");
+
+            } else if (tipo == 2) {
+                ProdutoDigital novoDigital = new ProdutoDigital(novoId, nome, preco);
+                gerenciadorProdutos.adicionarProduto(novoDigital);
+                System.out.println("Produto Digital cadastrado com sucesso!");
+
+            } else {
+                System.out.println("Tipo inválido. Cancelando cadastro.");
+                return;
+            }
+            gerenciadorProdutos.salvarProdutos();
+            System.out.println("Produto salvo no sistema.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: Digite apenas números para preço/estoque.");
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar: " + e.getMessage());
+        }
     }
 
     public static void carregarClientes() {
@@ -329,6 +392,7 @@ public class Main {
         System.out.println("\n--- MENU PRINCIPAL ---");
         System.out.println("1. Novo Pedido");
         System.out.println("2. Relatórios");
+        System.out.println("3. Cadastrar Produto (Admin)");
         System.out.println("0. Sair");
         System.out.print("Escolha uma opção: ");
     }
